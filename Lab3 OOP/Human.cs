@@ -72,7 +72,7 @@ namespace Lab3_OOP
             this.point = point;
         }
 
-        public void CarArrived(object sender, EventArgs e)
+        public void carArrived(object sender, EventArgs e)
         {
             if (sender is Car taxi && !destinationPoint.IsEmpty)
             {

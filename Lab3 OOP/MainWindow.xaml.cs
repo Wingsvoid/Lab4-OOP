@@ -26,23 +26,14 @@ namespace Lab3_OOP
 
         List<PointLatLng> pts = new List<PointLatLng>();
 
-        //для фокуса на такси
-        public static GMapControl map;
-
         Human taxiClient;
-        public static GMapMarker marker_taxiClient;
         Car taxiCar;
-        public static GMapMarker marker_taxiCar;
         Location taxiClientDestination;
-        public static GMapMarker marker_taxiClientDestination;
-
-
 
         public MainWindow()
         {
             InitializeComponent();
             cb1.IsChecked = true;
-            map = Map;
         }
 
         private void MapLoaded(object sender, RoutedEventArgs e)
@@ -263,17 +254,15 @@ namespace Lab3_OOP
             if (btn_SetDestination.IsCancel && taxiClient != null)
             {
                 taxiClientDestination = new Location("DestinationPoint", point);
-                marker_taxiClientDestination = taxiClientDestination.getMarker();
                 taxiClient.Destination = point;
-                Map.Markers.Add(marker_taxiClient);
-                Map.Markers.Add(marker_taxiClientDestination);
+                Map.Markers.Add(taxiClient.getMarker());
+                Map.Markers.Add(taxiClientDestination.getMarker());
             }
             else
             {
                 taxiClient = new Human("TaxiClient", point);
                 taxiClientDestination = null;
-                marker_taxiClient = taxiClient.getMarker();
-                Map.Markers.Add(marker_taxiClient);
+                Map.Markers.Add(taxiClient.getMarker());
             }
 
 
@@ -307,15 +296,23 @@ namespace Lab3_OOP
             }
             if (taxiCar != null)
             {
-                marker_taxiCar = taxiCar.getMarker();
                 Map.Markers.Clear();
-                Map.Markers.Add(marker_taxiClient);
-                Map.Markers.Add(marker_taxiClientDestination);
-                Map.Markers.Add(marker_taxiCar);
-                taxiCar.Arrived += taxiClient.CarArrived;
+                Map.Markers.Add(taxiClient.getMarker());
+                Map.Markers.Add(taxiClientDestination.getMarker());
+                Map.Markers.Add(taxiCar.getMarker());
+                taxiCar.Arrived += taxiClient.carArrived;
                 taxiClient.Seated += taxiCar.passengerSeated;
+                taxiCar.Moved += this.focusMapOn;
                 taxiCar.moveTo(taxiClient.getFocus());
             }
+        }
+        public void focusMapOn(object sender, EventArgs e)
+        {
+            if (sender is Car movedCar)
+            {
+                Map.Position = movedCar.getFocus();
+            }
+            //Map.Position = point;
         }
     }
 }

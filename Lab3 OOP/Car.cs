@@ -25,6 +25,7 @@ namespace Lab3_OOP
         private List<PointLatLng> route;
         private List<Human> passengers;
         public event EventHandler Arrived;
+        public event EventHandler Moved;
         private GMapMarker marker;
 
         public Car(string title, PointLatLng point) : base(title)
@@ -112,16 +113,17 @@ namespace Lab3_OOP
                     TransformGroup transform = new TransformGroup();
                     transform.Children.Add(new RotateTransform { Angle = angle - 90.0, CenterX = 14, CenterY = 14 });
                     transform.Children.Add(new TranslateTransform { X = -14, Y = -14 });
-                    MainWindow.marker_taxiCar.Shape.RenderTransform = transform;
+                    marker.Shape.RenderTransform = transform;
                     //MainWindow.marker_taxiCar.Shape.RenderTransform = new RotateTransform { Angle = angle - 90.0, CenterX = 14, CenterY = 14 };
                     //MainWindow.marker_taxiCar.Shape.RenderTransform = new TranslateTransform { X = -14, Y = -14 };
-                    MainWindow.marker_taxiCar.Position = this.point;      
-                    MainWindow.map.Position = this.point; 
+                    marker.Position = this.point;
+                    Moved?.Invoke(this, null);
+                    
                     //добавить перемещение пассажиров
                     foreach (Human passenger in passengers)
                     {
                         passenger.moveTo(this.point);
-                        MainWindow.marker_taxiClient.Position = passenger.getFocus();
+                        passenger.getMarker().Position = passenger.getFocus();
                     }
                     
                 });
