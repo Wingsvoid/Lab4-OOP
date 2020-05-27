@@ -25,12 +25,24 @@ namespace Lab3_OOP
         private List<PointLatLng> route;
         private List<Human> passengers;
         public event EventHandler Arrived;
+        private GMapMarker marker;
 
         public Car(string title, PointLatLng point) : base(title)
         {
             this.point = point;
             this.passengers = new List<Human>();
             //this.route = new List<PointLatLng>();
+            marker = new GMapMarker(point)
+            {
+                Shape = new Image
+                {
+                    Width = 42, // ширина маркера
+                    Height = 42, // высота маркера
+                    ToolTip = this.getTitle(), // всплывающая подсказка
+                    Source = new BitmapImage(new Uri("pack://application:,,,/imgs/car.png")), // картинка
+                    RenderTransform = new TranslateTransform { X = -14, Y = -14 }
+                }
+            };
         }
 
         public override double getDistance(PointLatLng point)
@@ -51,18 +63,6 @@ namespace Lab3_OOP
 
         public override GMapMarker getMarker()
         {
-
-            GMapMarker marker = new GMapMarker(point)
-            {
-                Shape = new Image
-                {
-                    Width = 42, // ширина маркера
-                    Height = 42, // высота маркера
-                    ToolTip = this.getTitle(), // всплывающая подсказка
-                    Source = new BitmapImage(new Uri("pack://application:,,,/imgs/car.png")), // картинка
-                    RenderTransform = new TranslateTransform { X = -14, Y = -14 }
-                }
-            };
             return marker;
         }
 

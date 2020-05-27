@@ -22,6 +22,7 @@ namespace Lab3_OOP
         private PointLatLng destinationPoint;
         public event EventHandler Seated;
         private bool inTaxi;
+        private GMapMarker marker;
 
         public PointLatLng Destination
         {
@@ -33,6 +34,17 @@ namespace Lab3_OOP
         {
             this.point = point;
             this.inTaxi = false;
+            marker = new GMapMarker(point)
+            {
+                Shape = new Image
+                {
+                    Width = 42, // ширина маркера
+                    Height = 42, // высота маркера
+                    ToolTip = this.getTitle(), // всплывающая подсказка
+                    Source = new BitmapImage(new Uri("pack://application:,,,/imgs/human.png")), // картинка
+                    RenderTransform = new TranslateTransform { X = -14, Y = -14 } // картинка
+                }
+            };
         }
 
         public override double getDistance(PointLatLng point)
@@ -53,18 +65,6 @@ namespace Lab3_OOP
 
         public override GMapMarker getMarker()
         {
-            GMapMarker marker = new GMapMarker(point)
-            {
-                Shape = new Image
-                {
-                    Width = 42, // ширина маркера
-                    Height = 42, // высота маркера
-                    ToolTip = this.getTitle(), // всплывающая подсказка
-                    Source = new BitmapImage(new Uri("pack://application:,,,/imgs/human.png")), // картинка
-                    RenderTransform = new TranslateTransform { X = -14, Y = -14 } // картинка
-                }
-            };
-
             return marker;
         }
         public void moveTo(PointLatLng point)
